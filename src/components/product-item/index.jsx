@@ -1,7 +1,6 @@
 import { BsCartPlus } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { addProductsToCart } from "../../redux/cart/actions";
-
+import { addProduct } from "../../redux/cart/slice";
 // Components
 import CustomButton from "../custom-button/index";
 
@@ -15,7 +14,7 @@ const ProductItem = ({ product }) => {
   const dispatch = useDispatch();
   
   const handleProductClick = () => {
-    dispatch(addProductsToCart(product));
+    dispatch(addProduct(product));
   }
 
   return (
