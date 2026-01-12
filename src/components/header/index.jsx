@@ -1,43 +1,50 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Cart from '../cart/index';
+import Cart from "../cart/index";
 
-import * as Styles from './styles';
+import * as Styles from "./styles";
 
-import userActionTypes from '../../redux/user/actionTypes';
+import { loginUser, logoutUser } from "../../redux/user/actions";
+import { selectProductscount } from "../../redux/cart/cart.selector";
 
 function Header() {
   const [cartIsVisible, setCartIsVisible] = useState(false);
 
-  const { currentUser } = useSelector(rootReducer => rootReducer.userReducer);
+  const { currentUser } = useSelector((rootReducer) => rootReducer.userReducer);
+  const { products } = useSelector((rootReducer) => rootReducer.cartReducer);
+  const productsCount = useSelector(selectProductscount);
+
   const dispatch = useDispatch();
 
-  console.log({ currentUser });
 
   const handleCartClick = () => {
-    setCartIsVisible = true;
+    setCartIsVisible(true);
   };
 
   const handleLoginClick = () => {
-    dispatch({
-      type: userActionTypes.LOGIN,
-      payload: { name: 'Joao', email: 'joao@jao.com'}
-    })
-  }
+    dispatch(loginUser({ name: "Joao", email: "joao@gmail.com" }))
+  };
 
-  return(
+  const handleLogoutClick = () => {
+    dispatch(logoutUser());
+  };
+
+  return (
     <Styles.Container>
       <Styles.Logo>Redux Shopping</Styles.Logo>
       <Styles.Buttons>
-        {currentUser ? <div>Sair</div> : <div onClick={handleLoginClick}>Login</div>}
-        <div onClick={handleCartClick}>Carrinho</div>
+        {currentUser ? (
+          <div onClick={handleLogoutClick}>Sair</div>
+        ) : (
+          <div onClick={handleLoginClick}>Login</div>
+        )}
+        <div onClick={handleCartClick}>Carrinho <span>({productsCount})</span></div>
       </Styles.Buttons>
 
       <Cart isVisible={cartIsVisible} setIsVisible={setCartIsVisible} />
     </Styles.Container>
-  )
-
+  );
 }
 
 export default Header;
